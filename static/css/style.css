@@ -1,0 +1,395 @@
+h1 h2 h3 p
+{
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+body
+{
+	margin: 0px;
+}
+
+#header
+{
+	width: 100%;
+	height: 36px;
+	background-color: #333;
+	position: fixed;
+	z-index: 1000;
+}
+
+#header h1
+{
+	-webkit-margin-before: 0px;
+	font-weight: normal;
+	font-size: 30px;
+	color: #cccccc;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#header h2
+{
+	font-weight: normal;
+	-webkit-margin-before: .1em;
+	color: #ccc;
+	float: left;
+	margin-left: 20px;
+}
+
+.profile
+{
+	float: right;
+	margin-right: 30px;
+}
+
+.profile p
+{
+	float: left;
+	color: #ccc;
+	-webkit-margin-before: .5em !important;
+	-webkit-margin-after: 0em !important;
+}
+
+.down_arrow
+{
+	float:left;
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid #ccc;
+	padding: 0px;
+	margin-top: 15px;
+	margin-left: 5px;
+}
+
+.profile:hover
+{
+	cursor: pointer;
+}
+
+#floater
+{
+	height: 36px;
+}
+
+,body h2
+{
+	font: 36px bold Arial;
+	text-align: center;
+}
+
+#pro_label
+{
+	color: #336699;
+}
+
+#con_label
+{
+	color: #9A4444;
+}
+
+#divider
+{
+	width: 1px;
+	height: 100%;
+	background-color: #777777;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.side
+{
+	
+	width: 599px;
+	height: 100%;
+}
+
+#body
+{
+	width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#pro
+{
+	float: left;
+	border-right: 1px solid #777777;
+}
+
+#con
+{
+	float: right;
+	border-left: 1px solid #777777;
+}
+
+.navigation
+{
+	height: 112;
+	width: 592px;
+	margin-bottom: 10px;
+	float: left;
+}
+
+#pro_navigation
+{
+	float: left;
+	margin-left: 5px;
+}
+
+#con_navigation
+{
+	margin-left: 15px;
+}
+
+#con_sidebar
+{
+	float: right;
+}
+
+.arrow, .inactive_arrow
+{
+	float: left;
+	height: 50px;
+	width: 25px;
+	margin-top: 34px;
+}
+
+.arrow:hover
+{
+	cursor: pointer;
+}
+
+.inactive_arrow:hover
+{
+	cursor: auto;
+}
+
+#pro_up_arrow
+{	
+	background: url('pro_up_arrow.png');
+	opacity: 0.4;
+}
+
+#inactive_pro_up_arrow
+{
+	background: url('pro_up_arrow.png');
+	opacity: 0;
+}
+
+#pro_down_arrow
+{
+	background: url('pro_down_arrow.png');
+	position: relative;
+	bottom: 0;
+	opacity: 0.4;
+}
+
+#inactive_pro_down_arrow
+{
+	background: url('pro_down_arrow.png');
+	position: absolute;
+	bottom: 0;
+	opacity: 0;
+}
+
+#con_up_arrow
+{
+	background: url('con_up_arrow.png');
+	opacity: 0.4;
+}
+
+#inactive_con_up_arrow
+{
+	background: url('con_up_arrow.png');
+	opacity: 0;
+}
+
+#con_down_arrow
+{
+	background: url('con_down_arrow.png');
+	bottom: 0;
+	opacity: 0.4;
+}
+
+#inactive_con_down_arrow
+{
+	background: url('con_down_arrow.png');
+	position: absolute;
+	bottom: 0;
+	opacity: 0;
+	float: left;
+}
+
+#pro_up_arrow:hover, #pro_down_arrow:hover, #con_up_arrow:hover, #con_down_arrow:hover
+{
+	opacity: 1;
+}
+
+.thumbnail
+{
+	width: 150px;
+	margin-bottom: 8px;
+	margin-top: 8px;
+}
+
+.thumbnail:hover
+{
+	cursor: pointer;
+}
+
+#pro iframe
+{
+	float: left;
+	margin-left: 42px;
+}
+
+#con iframe
+{
+	float: right;
+	margin-right: 42px;
+}
+
+.video_list_container
+{
+	overflow: hidden;
+	height: 112px;
+	width: 528px;
+	margin-left: 0px;
+	float: left;
+}
+
+#con_video_list_container
+{
+	margin-left: 0px;
+}
+
+.video_list_container img
+{
+	float: left;
+	margin-left: 13px;
+	margin-right: 13px;
+}
+
+.video_list_container_inner
+{
+	position: relative;
+	width: 1056px;
+}
+
+.info
+{
+	width: 483px;
+	border: 1px solid #dddddd;
+	float: left;
+	margin-left: 42px;
+	padding: 10px;
+}
+
+#con .info
+{
+	margin-left: 52px;
+}
+
+#upload_button
+{
+	height: 50px;
+	width: 100px;
+	background-color: lightgreen;
+	position: absolute;
+	border-radius: 5px;
+
+}
+
+#upload_button h3
+{
+	color: white;
+	text-align: center;
+	vertical-align: middle;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.info div, span
+{
+	margin-left: 10px;
+}
+
+.title h3
+{
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.user
+{
+	border-right: 1px solid #666;
+	padding-right: 10px;
+	float: left;
+}
+
+.user a
+{
+	color: #333333;
+	text-decoration: none;
+}
+
+.user a:hover
+{
+	text-decoration: underline;
+}
+
+.user_info
+{
+	float: left;
+	position: relative;
+	top: 3px;
+}
+
+.user_info p
+{
+	color: #aaaaaa;
+	font-size: 14px;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+
+.vote
+{
+	float: right;
+	width: 100px;
+	position: relative;
+	top: -10px;
+}
+
+.vote span
+{
+	color: #333333;
+	margin: 0px;
+}
+
+.vote_icon
+{
+	position: relative;
+	top: 6px;
+}
+
+.vote_icon img
+{	
+	width: 25px;
+}
+
+.vote_count
+{
+	position: relative;
+	left: 30px;
+}
+
+.vote_count p
+{
+	color: #aaa;
+	font-size: 14px;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
