@@ -3,7 +3,7 @@ from django.template import Context
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.shortcuts import render_to_response
-from soapbox.models import *
+from soapbox_demo.models import *
 import datetime
 from django.conf import settings
 
