@@ -1,0 +1,645 @@
+<html>
+	<head>
+		<title>Soapbox: Should the U.S. legalize gay marriage?</title>
+		<link rel='stylesheet' type='text/css' href='/static/css/video-page.css'/>
+		<link rel='stylesheet' type='text/css' href='/static/css/buttons.css'/>
+		<link rel='stylesheet' type='text/css' href='/static/css/font-awesome-ie7.min.css'/>
+		<link rel='stylesheet' type='text/css' href='/static/css/font-awesome.min.css'/>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type='text/javascript'>
+			$(document).ready(function(){
+
+				{% for video1, recent_video1, user1, recent_user1 in pros %}
+					// If the video exists, append it to the video list.
+					$.ajax({
+						async: false,
+						type: 'GET',
+						url: "http://gdata.youtube.com/feeds/api/videos/{{video1.video_id}}", 
+						success: function(){
+							//create the thumbnail to insert.
+							var thumbnail = $(
+								"<div class='thumbnail'>" +
+								" <div class='video_pic'>" +
+								"		<img id='{{video1.video_id}}' src='http://img.youtube.com/vi/{{video1.video_id}}/0.jpg'>" +
+								" </div> " +
+								"	<div class='video_title'>" +
+								"		<h3>{{video1.name}}</h3>" +
+								" </div>" +
+								" <div class='video_info'>" +
+								"		<span class='name'>{{user1.name}}</span>" +
+								"		<span class='upvotes'>{{video1.upvotes}} Upvotes</span>" +
+								"		<p class='views_date'>{{video1.post_date|timesince}} ago</p>" +
+								" </div>" +
+								"</div>"
+							);
+
+							$('#pro .video_list_container_inner').append(thumbnail);
+						}
+					});
+					
+					$.ajax({
+						async: false,
+						type: 'GET',
+						url: "http://gdata.youtube.com/feeds/api/videos/{{recent_video1.video_id}}", 
+						success: function(){
+							//create the thumbnail to insert.
+							var thumbnail = $(
+								"<div class='thumbnail'>" +
+								" <div class='video_pic'>" +
+								"		<img id='{{recent_video1.video_id}}' src='http://img.youtube.com/vi/{{recent_video1.video_id}}/0.jpg'>" +
+								" </div> " +
+								"	<div class='video_title'>" +
+								"		<h3>{{recent_video1.name}}</h3>" +
+								" </div>" +
+								" <div class='video_info'>" +
+								"		<span class='name'>{{recent_user1.name}}</span>" +
+								"		<span class='upvotes'>{{recent_video1.upvotes}} Upvotes</span>" +
+								"		<p class='views_date'>{{recent_video1.post_date|timesince}} ago</p>" +
+								" </div>" +
+								"</div>"
+							);
+
+							$('#pro .recent_video_list_container_inner').append(thumbnail);
+						}
+					});
+				{% endfor %}
+
+				// show down arrows if there are more than four videos in the list.
+				if ( $('#pro_video_list_container .thumbnail').length > 4 )
+					$('#pro .inactive_down_arrow').attr('class', 'down_arrow');	
+				
+				if ( $('#con_video_list_container .thumbnail').length > 4 )
+					$('#con .inactive_down_arrow').attr('class', 'down_arrow');	
+
+				// same as above for con videos.
+				var i = 2;
+				var count = 0;
+				{% for video2, recent_video2, user2, recent_user2 in cons %}
+					// If the video exists, append it to the video list.
+					$.ajax({
+						async: false,
+						type: 'GET',
+						url: "http://gdata.youtube.com/feeds/api/videos/{{video2.video_id}}", 
+						success: function(){
+							//create the thumbnail to insert.
+							var thumbnail = $(
+								"<div class='thumbnail'>" +
+								" <div class='video_pic'>" +
+								"		<img id='{{video2.video_id}}' src='http://img.youtube.com/vi/{{video2.video_id}}/0.jpg'>" +
+								" </div> " +
+								"	<div class='video_title'>" +
+								"		<h3>{{video2.name}}</h3>" +
+								" </div>" +
+								" <div class='video_info'>" +
+								"		<span class='name'>{{user2.name}}</span>" +
+								"		<span class='upvotes'>{{video2.upvotes}} Upvotes</span>" +
+								"		<p class='views_date'>{{video2.post_date|timesince}} ago</p>" +
+								" </div>" +
+								"</div>"
+							);
+
+							$('#con .video_list_container_inner').append(thumbnail);
+						}
+					});
+					
+					$.ajax({
+						async: false,
+						type: 'GET',
+						url: "http://gdata.youtube.com/feeds/api/videos/{{recent_video2.video_id}}", 
+						success: function(){
+							//create the thumbnail to insert.
+							var thumbnail = $(
+								"<div class='thumbnail'>" +
+								" <div class='video_pic'>" +
+								"		<img id='{{recent_video2.video_id}}' src='http://img.youtube.com/vi/{{recent_video2.video_id}}/0.jpg'>" +
+								" </div> " +
+								"	<div class='video_title'>" +
+								"		<h3>{{recent_video2.name}}</h3>" +
+								" </div>" +
+								" <div class='video_info'>" +
+								"		<span class='name'>{{recent_user2.name}}</span>" +
+								"		<span class='upvotes'>{{recent_video2.upvotes}} Upvotes</span>" +
+								"		<p class='views_date'>{{recent_video2.post_date|timesince}} ago</p>" +
+								" </div>" +
+								"</div>"
+							);
+
+							$('#con .recent_video_list_container_inner').append(thumbnail);
+						}
+					});
+				{% endfor %}
+
+				//var show_more = $("<div id='show_more' class='button button-rounded button-flat-primary'>Show more</div>")
+				//$('#con .video_list_container_inner').append(show_more);	
+			
+				// user clicks thumbnail, new video shows up.
+				$('.video_title').click(function(){
+					$('#con').fadeTo(1000, 0.05);
+					$('#pro').fadeTo(1000, 0.05);
+					$('#upload_button').fadeTo(1000, 0.05);
+					$('#header').fadeTo(1000, 0.05);
+					$('#video_container').css('visibility', 'visible');
+					$('#video').css('visibility', 'visible');
+
+					var thumbnail = $(this).parent();
+					$('#video').fadeTo(1000, 1, function()
+					{
+						var image = $(thumbnail).children(':first').children(':first');
+						var video_id = $(image).attr('id');
+						var video = $('<iframe width="592" height="333" src="//www.youtube.com/embed/' + video_id + '" frameborder="0" allowfullscreen>');
+						$('#player').append(video);
+					});
+					
+					// the thumbnail clicked is a pro video.
+					video_list_container = $(thumbnail).parent().parent();
+					if ( $(video_list_container).attr('id') == 'pro_video_list_container' )
+					{
+						//change background to blue
+						$('#video').css('background-color', '#1874cd');	
+
+						// get info for video
+						var video_index = $(thumbnail).index();
+						var i = 0;
+						{% for pro_video, pro_video_date, pro_user in pros %}
+							if ( i === video_index )
+							{
+								$('#title h3').text('{{pro_video.name}}');
+								//$('.vote_count p').text('{{pro_video.upvotes}}');
+								$('#user a').text('{{pro_user.name}}');
+								$('#user a').attr('href', 'http://127.0.0.1:8000/profile/{{pro_user.id}}')
+								$('#user_info').text('{{pro_user.city}}, {{pro_user.state}}');
+							}
+							i++;
+						{% endfor %}
+					}
+					// the video clicked is a con_video
+					else
+					{
+						//change background to red
+						$('#video').css('background-color', '#d23');
+
+						// get info for video
+						var video_index = $(thumbnail).index();
+						var i = 0;
+						{% for con_video, con_video_date, con_user in cons %}
+							if ( i === video_index )
+							{
+								$('#title h3').text('{{con_video.name}}');
+								//$('#con .vote_count p').text('{{con_video.upvotes}}');
+								$('#user a').text('{{con_user.name}}');
+								$('#user a').attr('href', 'http://127.0.0.1:8000/profile/{{con_user.id}}')
+								$('#user_info').text('{{con_user.city}}, {{con_user.state}}');
+							}
+							i++;
+						{% endfor %}
+					}
+				});
+
+				$(document).ajaxSend(function(event, xhr, settings) {
+
+					function getCookie(name) {
+						var cookieValue = null;
+						if (document.cookie && document.cookie != '') {
+							var cookies = document.cookie.split(';');
+							for (var i = 0; i < cookies.length; i++) {
+								var cookie = jQuery.trim(cookies[i]);
+								// Does this cookie string begin with the name we want?
+								if (cookie.substring(0, name.length + 1) == (name + '=')) {
+									cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+									break;
+								}
+							}
+						}
+						return cookieValue;
+					}
+					function sameOrigin(url) {
+						// url could be relative or scheme relative or absolute
+						var host = document.location.host; // host + port
+						var protocol = document.location.protocol;
+						var sr_origin = '//' + host;
+						var origin = protocol + sr_origin;
+						// Allow absolute or scheme relative URLs to same origin
+						return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+							(url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+							// or any other URL that isn't scheme relative or absolute i.e relative.
+							!(/^(\/\/|http:|https:).*/.test(url));
+					}
+					function safeMethod(method) {
+						return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+					}
+
+					if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+						xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+					}
+				});
+
+				// Fades the header and body out. TODO: add the ability for users to upload an actual video.
+				$('#upload_button').click(function()
+				{
+					// fade out the background
+					$('#con').fadeTo(1000, 0.05);
+					$('#pro').fadeTo(1000, 0.05);
+					$('#upload_button').fadeTo(1000, 0.05);
+					$('#header').fadeTo(1000, 0.05);
+					$('.thumbnail_cover').attr('class', 'inactive_thumbnail_cover');					
+					
+					// show the upload window
+					$('#upload_container').css('visibility', 'visible');
+					$('#upload').css('visibility', 'visible');
+					$('#upload').fadeTo(1000, 1)
+				});
+
+				// If we click anywhere outside of a popup, fade back to the main page.
+				$('body').click(function(e)
+				{
+					if ( $('#video').css('opacity') == 1 )
+					{
+						if (!$(e.target).closest($('#video')).length > 0 )
+						{//popup is a video
+							$('iframe').remove();
+							$('#video').fadeTo(1000, 0, function()
+							{
+								$('#video').css('visibility', 'hidden');
+								$('#video_container').css('visibility', 'hidden');
+							});
+							$('#header').fadeTo(1000, 1);
+							$('#con').fadeTo(1000, 1);
+							$('#pro').fadeTo(1000, 1);
+							$('#upload_button').fadeTo(1000, 1);
+							$('.inactive_thumbnail_cover').attr('class', 'thumbnail_cover');					
+						}
+					}
+					else if ( $('#upload').css('opacity') == 1 )
+					{
+						if ( !$(e.target).closest($('#upload')).length > 0 )
+						{//popup is an upload form.
+							$('#upload').fadeTo(1000, 0, function()
+							{
+								$('#upload').css('visibility', 'hidden');
+								$('#upload_container').css('visibility', 'hidden');
+							});
+							$('#header').fadeTo(1000, 1);
+							$('#con').fadeTo(1000, 1);
+							$('#pro').fadeTo(1000, 1);
+							$('#upload_button').fadeTo(1000, 1);
+							$('.inactive_thumbnail_cover').attr('class', 'thumbnail_cover');					
+						}
+					}
+				});
+
+				// Goes to the next list of pro videos.
+				$('body').delegate('#pro .down_arrow', 'click', function(){
+					// get the distance between the bottom of the inner and outer container.
+					var inner_bottom = $('#pro .video_list_container_inner').position().top+$('#pro .video_list_container_inner').outerHeight(true);
+					var outer_bottom = $('#pro .video_list_container').position().top+$('#pro .video_list_container').outerHeight(true);
+					var mov = inner_bottom - outer_bottom - 20;
+
+					if ( mov > 414 )
+						mov = 414;
+					else
+					{ // switch arrows.
+						$(this).attr('class', 'inactive_down_arrow');
+						$('#pro .inactive_up_arrow').attr('class', 'up_arrow');
+					}
+
+					var strMov = mov.toString();
+					strMov = '-=' + strMov;
+
+					// move the inner container down
+					$('#pro .video_list_container_inner').animate({top:strMov}, 500);
+				});
+
+				// Goes to the previous list of pro videos.
+				$('body').delegate('#pro .up_arrow', 'click', function(){
+					// get the distance between the top of the inner and outer container.
+					var inner_top = $('#pro .video_list_container_inner').position().top;
+					var outer_top = $('#pro .video_list_container').position().top;
+					var mov = outer_top - inner_top;
+
+					if ( mov > 414 )
+						mov = 414;
+					else
+					{ //switch arrows
+						$(this).attr('class', 'inactive_up_arrow');
+						$('#pro .inactive_down_arrow').attr('class', 'down_arrow');
+					}
+
+					var strMov = mov.toString();
+					strMov = '+=' + strMov;
+
+					$('#pro .video_list_container_inner').animate({top:strMov}, 500);
+				});
+	
+				// Goes to the next list of con videos.
+				$('body').delegate('#con .down_arrow', 'click', function(){
+					// get the distance between the bottom of the inner and outer container.
+					var inner_bottom = $('#con .video_list_container_inner').position().top+$('#con .video_list_container_inner').outerHeight(true);
+					var outer_bottom = $('#con .video_list_container').position().top+$('#con .video_list_container').outerHeight(true);
+					var mov = inner_bottom - outer_bottom - 20;
+
+					if ( mov > 414 )
+						mov = 414;
+					else
+					{ // switch arrows.
+						$(this).attr('class', 'inactive_down_arrow');
+						$('#con .inactive_up_arrow').attr('class', 'up_arrow');
+					}
+
+					var strMov = mov.toString();
+					strMov = '-=' + strMov;
+
+					// move the inner container down
+					$('#con .video_list_container_inner').animate({top:strMov}, 500);
+				});
+
+				// Goes to the previous list of con videos.
+				$('body').delegate('#con .up_arrow', 'click', function(){
+					// get the distance between the top of the inner and outer container.
+					var inner_top = $('#con .video_list_container_inner').position().top;
+					var outer_top = $('#con .video_list_container').position().top;
+					var mov = outer_top - inner_top;
+
+					if ( mov > 414 )
+						mov = 414;
+					else
+					{ //switch arrows
+						$(this).attr('class', 'inactive_up_arrow');
+						$('#con .inactive_down_arrow').attr('class', 'down_arrow');
+					}
+
+					var strMov = mov.toString();
+					strMov = '+=' + strMov;
+
+					$('#con .video_list_container_inner').animate({top:strMov}, 500);
+				});
+
+				// Post text in the comment box to comments
+				$('#post_button').click(function(){
+					var text = $('#comment_box').val();
+					if ( text != "")
+					{
+						$('#comments').prepend(
+							" <div class='comment' style='display:none;'> " +
+							"		<div class='profile_pic'> " +
+							"			<img src='/static/img/cole_zuber_pic_50x50.jpg'> " +
+							"		</div> " +
+							"		<div class='text'> " +
+							"			<p>" + text + "</p>" +
+							"		</div> " +
+							"	</div> "
+						);
+					}
+					var comments = $('#comments').children();
+					$(comments[0]).slideDown();
+				});
+
+				$('.close').click(function(){
+					$('iframe').remove();
+					$('#video').fadeTo(1000, 0, function()
+					{
+						$('#video').css('visibility', 'hidden');
+						$('#video_container').css('visibility', 'hidden');
+					});
+					$('#header').fadeTo(1000, 1);
+					$('#con').fadeTo(1000, 1);
+					$('#pro').fadeTo(1000, 1);
+					$('#upload_button').fadeTo(1000, 1);
+					$('.inactive_thumbnail_cover').attr('class', 'thumbnail_cover');					
+				});
+			
+				$('.top_rated').click(function(){
+					if ($(this).attr('data-state') == 'active')
+					{
+						var selectors = $(this).parent();
+						var side = $(selectors).parent();
+						$(this).attr('data-state', 'inactive')
+						$(selectors).children('.most_recent').attr('data-state', 'active');
+						$(side).children(':nth-child(3)').attr('class', 'video_list_container');
+						$(side).children(':nth-child(4)').attr('class', 'inactive_video_list_container');
+					}
+				});
+				
+				$('.most_recent').click(function(){
+					if ($(this).attr('data-state') == 'active')
+					{
+						var selectors = $(this).parent();
+						var side = $(selectors).parent();
+						$(this).attr('data-state', 'inactive')
+						$(selectors).children('.top_rated').attr('data-state', 'active');
+						$(side).children(':nth-child(4)').attr('class', 'video_list_container');
+						$(side).children(':nth-child(3)').attr('class', 'inactive_video_list_container');
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Topic -->
+		<div id='header'>
+			<a href='http://127.0.0.1:8000/home/'>
+				<h2>Soapbox</h2>
+			</a>
+			<div class='profile'>
+				<p>Cole Zuber</p>
+				<span class='down_arrow'></span>
+			</div>
+		</div>
+	
+		<div id='body'>
+			<h1 id='topic'>Should the U.S. legalize gay marriage?</h1>
+			<!-- List of Pro Videos -->
+			<div id='pro' class='side'>
+				<h2 id='pro_label'>Pro</h2>
+				<div class='inactive_up_arrow'></div>
+				<div class='video_selector'>
+					<span data-state='inactive' class='top_rated'>Top Rated</span>
+					<span class='seperator'>|</span>
+					<span data-state='active' class='most_recent'>Most Recent</span>
+				</div>
+				<div id='pro_video_list_container' class='video_list_container'>
+					<div class='video_list_container_inner'></div>
+				</div>
+				<div id='recent_pro_video_list_container' class='inactive_video_list_container'>
+					<div class='recent_video_list_container_inner'></div>
+				</div>
+				<div class='inactive_down_arrow'></div>
+			</div>
+
+			<div id='upload_button' class='button button-rounded button-flat-highlight'>Upload</div>
+
+			<div id='con' class='side'>
+				<h2 id='con_label'>Con</h2>
+				<div class='inactive_up_arrow'></div>
+				<div class='video_selector'>
+					<span data-state='inactive' class='top_rated'>Top Rated</span>
+					<span class='seperator'>|</span>
+					<span data-state='active' class='most_recent'>Most Recent</span>
+				</div>
+				<div id='con_video_list_container' class='video_list_container'>
+					<div class='video_list_container_inner'></div>
+				</div>
+				<div id='recent_con_video_list_container' class='inactive_video_list_container'>
+					<div class='recent_video_list_container_inner'></div>
+				</div>
+				<div class='inactive_down_arrow'></div>
+			</div>
+		</div>
+
+		<div id='video_container'>
+			<div id='video'>
+				<div class='close'>X</div>
+				<div id='left'>
+					<div id='player'></div>
+					<div id='bottom'>
+						<div id='description'>
+							<div id='title'>
+								<h3></h3>
+							</div>
+							<div id='user'>
+								<a href='http://127.0.0.1:8000/profile/{{pro_users.0.id}}'>{{pro_users.0.name}}</a>
+								<span id='user_info'></span>
+							</div>
+						</div>
+						<div id='upvote_button' class='button button-rounded button-flat'>Upvote</div>
+					</div>
+				</div>
+				<div id='comments_pane'>
+					<textarea id='comment_box' rows='8'></textarea>
+					<div id='post_button' class='button button-rounded button-flat'>Post</div>
+					<div id='comments'>
+						<div class='comment'>
+							<div class='profile_pic'>
+								<img src='/static/img/alexandria_rice_pic_50x50.jpg'>
+							</div>
+							<div class='text'>
+								<p>
+									hundreds of relationships, often thought that sedately the about, but there was happening and reward 
+									amongst the stench in invented gap between gap between people around, shifted lift. as day. - The couple 
+									of travel that he Quickly
+								</p>
+							</div>
+						</div>
+						<div class='comment'>
+							<div class='profile_pic'>
+								<img src='/static/img/cole_zuber_pic_50x50.jpg'>
+							</div>
+							<div class='text'>
+								<p>
+									suspiciously. - Oh yes, I Frond like a You home ground they of light around of the five miles above all 
+									just one word of perpetual hate that as the cop, - Yes. - they stepped over From knew
+								</p>
+							</div>
+						</div>
+						<div class='comment'>
+							<div class='profile_pic'>
+								<img src='/static/img/cory_harrington_pic_50x50.jpg'>
+							</div>
+							<div class='text'>
+								<p>
+									bit, though it might be from a lot of a see years the poet's compassionate soul, - said Ford. of the 
+									post. Was there must be a small glass the section cabin - He frowned, then continued Ford again. America, 
+									he had
+								</p>
+							</div>
+						</div>
+						<div class='comment'>
+							<div class='profile_pic'>
+								<img class='profile_pic' src='/static/img/rodney_maxwell_pic_50x50.jpg'>
+							</div>
+							<div class='text'>
+								<p>
+									Chapter 22 He felt the Universe we wake me straight off things. - Yes!.. - 
+									leave it reflected a total towards the experiences of Gold. It must be made no point 
+									I gather, as anything. He slumped against and went around a passing policemen seemed between the
+								</p>
+							</div>
+						</div>
+						<div class='comment'>
+							<div class='profile_pic'>
+								<img class='profile_pic' src='/static/img/whitney_bush_pic_50x50.jpg'>
+							</div>
+							<div class='text'>
+								<p>
+									super-intelligent shade of the other Vogons. Still nothing. So all that's control asphyxication, What 
+									sort of nonchalance said, This is a lump of earth, but somewhat the heart screamed at the Galaxy was 
+									concentrating. He shaved them managed to abject poverty. And if the great and
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Form user uses to upload a video to the side -->
+		<div id='upload_container'>
+			<div id='upload'>
+				<h2 class='upload_header'>Upload</h2>
+				<div id='upload_controls'>
+					<div id='position_choice' class='upload_control'>
+						<input type='radio' name='position' value='pro'><span id='pro_choice'>Pro</span>
+						<input type='radio' name='position' value='con'><span id='con_choice'>Con</span>
+					</div>
+					<div id='upload_title_container' class='upload_control'>
+						<span>Title:</span><input id='upload_title' type='text'>
+					</div>
+				</div>
+				<div id='upload_player_container'>
+					<div id='widget'></div>
+				</div>
+			</div>
+		</div>
+		<script>
+      // 2. Asynchronously load the Upload Widget and Player API code.
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. Define global variables for the widget and the player.
+      //    The function loads the widget after the JavaScript code
+      //    has downloaded and defines event handlers for callback
+      //    notifications related to the widget.
+      var widget;
+      var player;
+      function onYouTubeIframeAPIReady() {
+        widget = new YT.UploadWidget('widget', {
+          width: 500,
+          events: {
+            'onUploadSuccess': onUploadSuccess,
+            'onProcessingComplete': onProcessingComplete
+          }
+        });
+				
+      }
+
+      // 4. This function is called when a video has been successfully uploaded.
+      function onUploadSuccess(event) {
+        alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
+				$.ajax({
+					url:'http://127.0.0.1:8000/submit_video/',
+					type: 'POST',
+					data : {
+						csrfmiddlewaretoken: "{{ csrf_token }}",
+						video_id: event.data.videoId,
+						title: $('#upload_title').val(),
+						position: $('input:radio[name=position]:checked').val(),
+						topic_id: 1,
+						user_id: 10
+					}
+				});
+      }
+
+      // 5. This function is called when a video has been successfully
+      //    processed.
+      function onProcessingComplete(event) {
+        player = new YT.Player('upload_player', {
+          height: 390,
+          width: 640,
+          videoId: event.data.videoId,
+          events: {}
+        });
+      }
+    </script>
+	</body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>Debate!</title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+	</head>
+	<body>
+		<form action="/email/" method="get">
+			<table>
+				<tr>
+					<td>Your Name: <input type ="text" name="challenger_name"></td>
+					<td>Your Email: <input type ="text" name='challenger_email'></td>
+				</tr>
+				<tr>
+					<td>Their Name: <input type ="text" name="challengee_name"></td>
+					<td>Their Email: <input type ="text" name='challengee_email'></td>
+				</tr>
+				<tr>
+					<td colspan="2">Spectators: <input type="text" name="spectators_email"></td>
+				</tr>
+				<tr>
+					<td colspan="2">Topic/Question: <input type="text" name="topic"></td>
+				</tr>
+				<tr>
+					<td>Date and Time: <input type="text" name="datetime"></td>
+				</tr>
+			</table>
+			<input type="submit" value="Challenge">
+		</form>
+	</body>
+</html>

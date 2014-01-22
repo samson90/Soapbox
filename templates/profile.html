@@ -1,0 +1,145 @@
+<html>
+	<head>
+		<title>Soapbox: {{user.name}}</title>
+		<link rel='stylesheet' type='text/css' href='/static/css/profile.css'/>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type='text/javascript' src='/static/js/profile.js'></script>
+	</head>
+	<body>
+		<div id='header'>
+			<a href='http://127.0.0.1:8000/home/'>
+				<h2>Soapbox</h2>
+			</a>
+			<div class='profile'>
+				<p>Cole Zuber</p>
+				<span class='down_arrow'></span>
+			</div>
+		</div>
+		<div id='floater'></div>
+		<div id='body'>
+			<div id='info'>
+				<div id='profile_pic'>
+				</div>
+				<div id='personal_info'>
+					<h4>{{user.name}}</h4>
+					<p>Age: {{user.age}}</p>
+					<p>Location: {{user.city}}, {{user.state}}</p>
+					<p>Occupation: {{user.occupation}}</p>
+					<p>Followers: 11</p>
+				</div>
+			</div>
+			<div id='navigation'>
+				<span id='recent_activity_button' class='label'>
+					<p>Recent Activity</p>
+				</span>
+				<span id='statistics_button' class='button'>
+					<p>Statistics</p>
+				</span>
+				<span id='about_button' class='button'>
+					<p>About</p>
+				</span>
+			</div>
+			<div id='display'>
+				<div id='recent_activity' class='panel'>
+					<div class='status_update'>
+						<p class='time_before'>4m</p>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4><a>Cole Zuber</a> is now following <a>Rodney Maxwell</a>.</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>4m</p>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Cole Zuber</a> commented on <a>Rodney Maxell's</a> video
+								<a>'Gay Couples should have the Same Rights as Straight Couples'</a>:
+							</h4>
+							<p>
+								'I agree! Our constitution ensures equal rights for all men and
+								women of the United States. There are no exception based on
+								sexuality anywhere in the document.'
+							</p>
+						</div>
+						<div class='ellipsis'><p>...</p></div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>6m</p>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Cole Zuber</a> upvoted <a>Rodney Maxwell's</a> video
+								<a>'Gay Couples should have the Same Rights as Straight Couples'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>1d</p>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> upvoted <a>Cory Harrington's</a> video
+								<a>'Gay Couples Should Have Access to the Same Benefits</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>2d</p>
+						<img src='/static/img/cory_harrington_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Cory Harrington</a> is now following <a>Rodney Maxwell</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>2d</p>
+						<img src='/static/img/cory_harrington_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Cory Harrington</a> upvoted <a>Rodney Maxwell's</a> video
+								<a>'Gay Couples should have the Same Rights as Straight Couples'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>4d</p>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> uploaded a video to the topic 
+								<a>'Should President Obama Pardon Edward Snowden?'</a> titled
+								<a>'What Happened to Obama's 2008 Campaign Promise to Protect Whistleblowers'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<p class='time_before'>4d</p>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> commented on <a>Wayne Reed's</a> video
+								<a>'The U.S. Must Have the Ability to Keep Secrets'</a>:
+							</h4>
+							<p>
+								'Obama promised to protect whistleblowers in his 2008 campaign.
+								Why should he be allowed to changed his mind just becuase he is
+								now in charge of the NSA.'
+							</p>
+						</div>
+						<div class='ellipsis'>
+							<p>...</p>
+						</div>
+					</div>
+				</div>
+				<div id='statistics' class='hidden_panel'>
+					<p>Statistics</p>
+				</div>
+				<div id='about' class='hidden_panel'>
+					<p>About</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

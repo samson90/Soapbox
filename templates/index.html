@@ -1,0 +1,253 @@
+<html>
+	<head>
+		<title>Soapbox</title>
+		<link rel='stylesheet' type='text/css' href="/static/css/index.css"/>
+			<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type='text/javascript' src='/static/js/index.js'></script>
+	</head>
+	<body>
+		<div id='header'>
+			<a href='http://127.0.0.1:8000/home/'>
+				<h2>Soapbox</h2>
+			</a>
+			<div class='profile'>
+				<p>Cole Zuber</p>
+				<span class='down_arrow'></span>
+			</div>
+		</div>
+		<div id='floater'></div>
+		<div id='main'>
+			<h3 id='welcome'>
+				Today's Topic:
+			</h3>
+
+		<!--	<div id='instructions'>
+
+				<div class='instruction_panel1'>
+					<div id='topic_image'>
+					</div>
+					<div class='instruction_label'>
+						<p>
+							Click on a topic to view user-submitted videos to the top.
+						</p>
+					</div>
+				</div>
+
+				<div id='bottom_instructions'>
+
+					<div id='panel2' class='instruction_panels'>
+						<div id='check_mark' class='instruction_image'>
+						</div>
+						<p>
+							Vote for and comment on videos that you find compelling.
+						</p>
+					</div>
+					<div id='panel3' class='instruction_panels'>
+						<div id='upload_button'>
+							<h3>Upload</h3>
+						</div>
+						<p>
+							Upload a video to voice your own opinion.
+						</p>
+					</div>
+
+				</div>
+
+			</div> -->
+			<div id='todays_topic'>
+				<div class='topic'>
+					<div class='date'>
+						<h3>{{ todays_topic.post_date.date }}</h3>
+					</div>
+					{% if topics.0.pros > topics.0.cons %}
+					<a id='pro_topic' class='topic_name' href='http://127.0.0.1:8000/video-page/{{ todays_topic.id }}'>
+						<h2 class='topic_name'>{{ todays_topic }}</h2>
+					</a>
+					{% else %}
+					<a id='con_topic' class='topic_name' href='http://127.0.0.1:8000/video-page/{{ todays_topic.id }}'>
+						<h2 class='topic_name'>{{ todays_topic }}</h2>
+					</a>
+					{% endif %}
+					<div class='stats'>
+						<span class='num_pros'>Pros: </span>
+						<span class='num'>{{ todays_topic.pros }}</span>
+						<span class='num_cons'>Cons: </span>
+						<span class='num'>{{ todays_topic.cons }}</span>
+					</div>
+					<div class='top_videos'>
+						<div class='top_pro'>
+						<div class='top_pro_video'>
+							<h3>Top Pro</h3>
+							<iframe width="370" height="208" src="//www.youtube.com/embed/{{pro_video.video_id}}" frameborder="0" allowfullscreen></iframe>
+						</div>
+						</div>
+						<div class='top_con_video'>
+							<h3>Top Con</h3>
+							<iframe width="370" height="208" src="//www.youtube.com/embed/{{con_video.video_id}}" frameborder="0" allowfullscreen></iframe>
+						</div>
+					</div>
+					<div class='expand_button'>
+						<span>Expand</span>
+					</div>
+				</div>
+			</div>
+
+			<div id='navigation'>
+				<span id='recent_activity_button' class='label'>
+					<p>Past Topics</p>
+				</span>
+				<span id='statistics_button' class='button'>
+					<p>Top Topics</p>
+				</span>
+				<span id='controversial_button' class='button'>
+					<p>Controversial</p>
+				</span>
+				<span id='top_videos_button' class='button'>
+					<p>Top Videos</p>
+				</span>
+				<span id='recent_videos_button' class='button'>
+					<p>Recent Videos</p>
+				</span>
+			</div>
+
+			<div id='display'>
+				<!-- The List of topics -->
+				<div id='topics' class='panel'>
+					<ul>
+					{% for topic in prev_topics %}
+						<li>
+							{% if topic.pros > topic.cons %}
+							<div data-position='pro' class='topic'>
+							{% else %}
+							<div data-position='con' class='topic'>
+							{% endif %}
+								<div class='date'>
+									<h3>{{ topic.post_date.date }}</h3>
+								</div>
+								{% if topic.pros > topic.cons %}
+								<a id='pro_topic' class='topic_name' href='http://127.0.0.1:8000/video-page/{{ topic.id }}'>
+									<h2 class='topic_name'>{{ topic }}</h2>
+								</a>
+								{% else %}
+								<a id='con_topic' class='topic_name' href='http://127.0.0.1:8000/video-page/{{ topic.id }}'>
+									<h2 class='topic_name'>{{ topic }}</h2>
+								</a>
+								{% endif %}
+								<div class='stats'>
+									<span class='num_pros'>Pros: </span>
+									<span class='num'>{{ topic.pros }}</span>
+									<span class='num_cons'>Cons: </span>
+									<span class='num'>{{ topic.cons }}</span>
+								</div>
+							</div>
+							</li>
+					{% endfor %}
+					</ul>
+				</div>
+
+				<!-- Feed for the user if he/she is logged in -->
+				<div id='feed' class='hidden_panel'>
+					<div class='status_update'>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>You are now following <a>Rodney Maxwell</a>.</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								You commented on <a>Rodney Maxell's</a> video
+								<a>'Gay Couples should have the Same Rights as Straight Couples'</a>:
+							</h4>
+							<p>
+								'I agree! Our constitution ensures equal rights for all men and
+								women of the United States. There are no exception based on
+								sexuality anywhere in the document.'
+							</p>
+						</div>
+						<div class='ellipsis'>
+							<p>...</p>
+						</div>
+					</div>
+					<div class='status_update'>
+						<img src='/static/img/cole_zuber_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								You upvoted <a>Rodney Maxwell's</a> video
+								<a>'Gay Couples should have the Same Rights as Straight Couples'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> upvoted <a>Cory Harrington's</a> video
+								<a>'Gay Couples Should Have Access to the Same Benefits</a>.
+							</h4>
+						</div>
+					</div>
+					<!-- NEEDS TO BE CHANGED -->
+					<div class='status_update'>
+						<img src='/static/img/alexandria_rice_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Alexandria Rice</a> liked <a>Rodney Maxwell's</a>
+								comment on <a>Wayne Reed's</a> video
+								<a>'The U.S. Must Have the Ability to Keep Secrets'</a>:
+							</h4>
+							<p>
+								'Obama promised to protect whistleblowers in his 2008 campaign.
+								Why should he be allowed to changed his mind just becuase he is
+								now in charge of the NSA.'
+							</p>
+						</div>
+						<div class='ellipsis'>
+							<p>...</p>
+						</div>
+					</div>
+					<!-- NEEDS TO BE CHANGED -->
+					<div class='status_update'>
+						<img src='/static/img/whitney_bush_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Whitney Bush</a> uploaded a video to the topic 
+								<a>'Should the U.S. Militarily Intervene in Syria?'</a> titled
+								<a>'The U.S. and its Allies are Morally Obligated to Overthrow Assad'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> uploaded a video to the topic 
+								<a>'Should President Obama Pardon Edward Snowden?'</a> titled
+								<a>'What Happened to Obama's 2008 Campaign Promise to Protect Whistleblowers'</a>.
+							</h4>
+						</div>
+					</div>
+					<div class='status_update'>
+						<img src='/static/img/rodney_maxwell_pic_100x100.jpg'>
+						<div class='status'>
+							<h4>
+								<a>Rodney Maxwell</a> commented on <a>Wayne Reed's</a> video
+								<a>'The U.S. Must Have the Ability to Keep Secrets'</a>:
+							</h4>
+							<p>
+								'Obama promised to protect whistleblowers in his 2008 campaign.
+								Why should he be allowed to changed his mind just becuase he is
+								now in charge of the NSA.'
+							</p>
+						</div>
+						<div class='ellipsis'>
+							<p>...</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

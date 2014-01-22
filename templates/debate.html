@@ -1,0 +1,322 @@
+<html>
+	<head>
+		<title>Debate!</title>
+		<link rel="stylesheet" type="text/css" href="/media/css/style.css">
+		<script src="http://static.opentok.com/v1.1/js/TB.min.js"></script>
+		<!-- <script src="http://static.opentok.com/v1.1/js/TB.min.js"></script> -->
+		<script type="text/javascript">
+			var session_id = "{{ session_id }}";
+			var token_number = "{{ token_number }}";
+			var api_key = "{{ api_key }}";
+			var challenger_name = "{{ challenger }}";
+			var challengee_name = "{{ challengee }}";
+			var role = "{{ role }}";
+
+			// Enable console logs for debugging
+			TB.setLogLevel(TB.DEBUG);
+
+			//initilize sessions
+			var session = TB.initSession(session_id);
+			var publisher;
+			session.addEventListener('sessionConnected', sessionConnectedHandler);
+			session.addEventListener('streamCreated', streamCreatedHandler);
+			session.addEventListener('streamPropertyChanged', streamPropertyChangedHandler);
+			session.addEventListener('streamDestroyed', streamDestroyedHandler);
+			session.addEventListener('signalReceived', signalHandler);
+			session.connect(api_key, token_number);
+
+			var seconds = 60.0; //the timer.
+			var ready = false;
+			var opponentReady = false;
+			var stream;
+			var timer;
+			var speaker;
+
+			function sessionConnectedHandler(event) {
+				if ( role !== "Subscriber" )
+				{
+					//adds the user stream to the board
+					if (role == "Challenger")
+					{
+						var publisherProperties = {name:"challenger_stream", width:528, height:396};
+						publisher = TB.initPublisher(api_key, 'challenger_stream', publisherProperties);
+						session.publish(publisher);
+						var title = document.getElementById('challenger_title');
+						title.innerHTML = role + ": " + challenger_name;
+					}
+					else if(role == "Challengee")
+					{
+						var publisherProperties = {name:"challengee_stream", width:528, height:396};
+						publisher = TB.initPublisher(api_key, 'challengee_stream', publisherProperties);
+						session.publish(publisher);
+						var title = document.getElementById('challengee_title');
+						title.innerHTML = role + ": " + challengee_name;
+					}
+					
+					// Sets the action of the mic_button.
+					var mic_button = document.getElementsByClassName('mic_button')[0];
+					mic_button.onclick = turnOffAudio;
+
+					// Sets the action of the start_button.
+					var start_button = document.getElementById("active_start_button");
+					start_button.onclick = sendReadySignal;
+				}
+
+				// Subscribe to streams that were in the session when we connected.
+				subscribeToStreams(event.streams);
+			}
+
+			function streamCreatedHandler(event) {
+				// Subscribe to any new streams that are created.
+				subscribeToStreams(event.streams);
+				if ( ready )
+				{
+					signal();
+				}
+				console.log("Stream created handler activated");
+				for ( var i = 0; i < event.streams.length; i++ )
+				{
+					if ( event.streams[i].connection.connectionId == session.connection.connectionId )
+					{
+						stream = event.streams[i];
+					}
+				}
+			}
+
+			// subscribe to any existing streams that are not your own.
+			function subscribeToStreams(streams){
+				for (var i = 0; i < streams.length; i++) {
+					// Make sure we don't subscribe to ourself
+					if (streams[i].connection.connectionId == session.connection.connectionId) {
+						return;
+					}
+
+					// Create the div to put the subscriber element in to
+					var video = document.createElement('div');
+					video.setAttribute('id', 'stream' + streams[i].streamId);
+					
+					//add stream to the board.
+					if (streams[i].name === "challenger_stream" && role !== "Challenger")
+					{
+						var challenger_stream = document.getElementById("challenger_stream");
+						challenger_stream.appendChild(video);
+						var challenger_title = document.getElementById('challenger_title');
+						challenger_title.innerHTML = "Challenger: " + challenger_name;
+					}
+					else if (streams[i].name === "challengee_stream" && role !== "Challengee")
+					{
+						var challengee_stream = document.getElementById("challengee_stream");
+						challengee_stream.appendChild(video);
+						var challengee_title = document.getElementById('challengee_title');
+						challengee_title.innerHTML = "Challengee: " + challengee_name;
+					}
+
+					// Subscribe to the stream
+					var videoProperties = {height: 396, width:528};
+					session.subscribe(streams[i], video.id, videoProperties);
+				}
+			}
+
+			//handles changes to stream properties
+			function streamPropertyChangedHandler(event){
+				// if the changed stream is not the publisher stream and the changed property is the
+				// audio which was changed to false. 
+				if 
+				( 
+					event.changedProperty === "hasAudio" && event.oldValue === true && 
+					event.stream.connection.connectionId != stream.connection.connectionId
+				)
+				{
+					// give stream audio
+					var button = document.getElementById("inactive_mic_button");
+					button.id = "active_mic_button";
+					publisher.publishAudio(true);
+					var user = document.getElementById(role.toLowerCase());
+					user.style.border = "5px solid LightGreen";
+					
+					// remove speaker from opponenet
+					var opponent_name = 'challenger';
+					if ( role == 'Challenger' )
+					{
+						opponent_name = 'challengee';
+					}
+					var opponent = document.getElementById(opponent_name);
+					opponent.style.border = "";
+
+					seconds = 60;
+				}
+			}
+
+			// runs when the stream is destroyed.
+			function streamDestroyedHandler(event)
+			{
+				seconds = 60;
+				clearInterval(timer);
+				opponentReady = false;
+			}
+
+			// handles signal event. If the user is ready, start the timer.
+			function signalHandler(event)
+			{
+				if ( event.fromConnection.connectionId != session.connection.connectionId)
+				{
+					console.log("Received ready signal from opponent");
+					opponentReady = true;
+
+					var opponent_name = 'challenger';
+					if ( role == 'Challenger' )
+					{
+						opponent_name = 'challengee';
+					}
+					var opponent = document.getElementById(opponent_name);
+					opponent.style.border = "5px solid LightGreen";
+
+					if ( ready )
+					{
+						startDebate();
+					}
+				}
+			}
+	
+			function startDebate()
+			{
+				console.log("Debate Started");
+				
+				// start button is replaced with a timer.
+				var start_button = document.getElementsByClassName('start_button')[0];
+				start_button.id = 'timer';
+				var start_button_label = document.getElementById('start_button_label');
+				start_button_label.id = 'timer_label';		
+
+				// give audio to the challenger first
+				if ( role == "Challengee" )
+				{
+					publisher.publishAudio(false);
+					var user = document.getElementById(role.toLowerCase());
+					user.style.border = "";
+				}
+				else
+				{
+					var opponent = document.getElementById('challengee');
+					opponent.style.border = ""
+				}
+
+				timer = setInterval(decrementTimer, 500);
+			}
+
+			//decrements the timer.
+			function decrementTimer()
+			{
+				if ( seconds == 0)
+				{
+					turnOffAudio();
+					seconds = 60;
+					var timer_label = document.getElementById('timer_label');
+					timer_label.style.color = "Green";
+				}
+				else
+				{
+					seconds -= 0.5;
+					var timer_label = document.getElementById('timer_label');
+					timer_label.innerHTML = Math.round(seconds);
+				
+					// change number to red and flashing once the timer goes below 5 seconds.
+					if ( seconds <= 5 )
+					{
+						timer_label.style.color = "Red";
+
+						// show the time it is a whole number, else hide it.
+						if ( Math.round(seconds) === seconds )
+						{
+							timer_label.innerHTML = seconds;
+						}
+						else
+						{
+							timer_label.innerHTML = "";
+						}
+					}
+				}
+			}
+
+			// switch audio over to the other user.
+			function turnOffAudio()
+			{
+				if ( stream.hasAudio )
+				{
+					var button = document.getElementById("active_mic_button");
+					button.id = "inactive_mic_button";
+					publisher.publishAudio(false);
+					var opponent = document.getElementById(role.toLowerCase());
+					opponent.style.border = "";
+				}
+				seconds = 60;
+					
+				var opponent_name = 'challenger';
+				if ( role == 'Challenger' )
+				{
+					opponent_name = 'challengee';
+				}
+				var opponent = document.getElementById(opponent_name);
+				opponent.style.border = "5px solid LightGreen";
+			}
+
+			// mark that user is ready and send signal to all subcribers
+			function sendReadySignal()
+			{
+				console.log("sent ready signal.");
+				ready = true;
+				session.signal();
+
+				var button = document.getElementById("active_start_button");
+				button.id = "inactive_start_button";
+				button.onclick = null;
+
+				var user = document.getElementById(role.toLowerCase());
+				user.style.border = "5px solid LightGreen";
+
+				if (opponentReady)
+				{
+					startDebate();
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<h1>
+			Topic: {{ topic }}
+		</h1>
+		<div id="board">
+			<div id="challenger">
+				<div id="challenger_stream">
+				</div>
+				<div id='challenger_panel' class='title_panel'>
+					<h2 id='challenger_title' class='title'>
+					</h2>
+				</div>
+			</div>
+			<div id='control_panel'>
+				<div id='active_start_button' class='start_button'>
+					<h2 id='start_button_label'>
+						Start
+					</h2>
+				</div>
+				<div id='inactive_mic_button' class='mic_button'>
+					<h2 id='mic_button_label'>
+						Pass
+					</h2>
+				</div>
+			</div>
+			<div id="challengee">
+				<div id="challengee_stream">
+				</div>
+				<div id='challengee_panel' class='title_panel'>
+					<h2 id='challengee_title' class='title'>
+					</h2>
+				</div>
+			</div>
+		</div>
+		<div id='spectators'>
+			<p>Spectators: 0</p>
+		</div>
+	</body>
+</html>
