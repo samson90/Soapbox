@@ -1,0 +1,137 @@
+h1
+{
+	font: 32px bold Arial;
+	text-align: center;
+	color: #778899;
+}
+
+h2
+{
+	font: 24px bold Arial;
+	text-align: center;
+}
+
+#challenger
+{
+	float: left;
+}
+
+#challengee
+{
+	float: right;
+}
+
+#board
+{
+	width: 1210px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#challenger h2
+{
+	color: LightSkyBlue;
+}
+
+#challengee h2
+{
+	color: LightCoral;
+}
+
+
+.mic_button
+{
+	float: left;
+	width: 80px;
+	height: 68px;
+	margin-top: 20px;
+}
+
+.start_button
+{
+	float: left;
+	width: 80px;
+	height: 68px;
+	margin-top: 100px;
+}
+
+#timer
+{
+	float: left;
+	width: 80px;
+	height: 68px;
+	margin-top: 100px;
+	background-color: White;
+}
+
+#timer_label
+{
+	color: Green;
+}
+
+#active_start_button
+{
+	background-color: Green;
+}
+
+#active_start_button:hover
+{
+	cursor: pointer;
+}
+
+#inactive_start_button
+{
+	background-color: LightGreen;
+}
+
+#start_button_label
+{
+	color: White;
+}
+
+#active_mic_button:hover
+{
+	cursor: pointer;
+}
+
+#active_mic_button
+{
+	background-color: Orange;
+}
+
+#inactive_mic_button
+{
+	background-color: #fbc97f;
+}
+
+#mic_button_label
+{
+	color: white;
+}
+
+.title
+{
+	float: left;
+	margin-left: 15px;
+}
+
+.title_panel
+{
+	height: 68px;
+	border: 2px solid lightgray;
+}
+
+#control_panel
+{
+	float: left;
+	height: 400px;
+	width: 70px;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+#spectators
+{
+	position: absolute;
+	bottom: 0;
+}
