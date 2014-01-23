@@ -24,3 +24,8 @@ urlpatterns = patterns('',
     url(r'^accept/(\d+)$', accept),
     url(r'^debate/([a-zA-Z0-9_]*)$', debate),
 )
+
+if not settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    )
