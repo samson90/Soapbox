@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^debate/([a-zA-Z0-9_]*)$', debate),
 )
 
-if not settings.DEBUG:
-    urlpatterns += patterns('',
-        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-    )
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns() 
