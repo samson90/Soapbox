@@ -166,7 +166,7 @@
 								$('#title h3').text('{{pro_video.name}}');
 								//$('.vote_count p').text('{{pro_video.upvotes}}');
 								$('#user a').text('{{pro_user.name}}');
-								$('#user a').attr('href', 'http://127.0.0.1:8000/profile/{{pro_user.id}}')
+								$('#user a').attr('href', '/profile/{{pro_user.id}}')
 								$('#user_info').text('{{pro_user.city}}, {{pro_user.state}}');
 							}
 							i++;
@@ -187,7 +187,7 @@
 								$('#title h3').text('{{con_video.name}}');
 								//$('#con .vote_count p').text('{{con_video.upvotes}}');
 								$('#user a').text('{{con_user.name}}');
-								$('#user a').attr('href', 'http://127.0.0.1:8000/profile/{{con_user.id}}')
+								$('#user a').attr('href', '/profile/{{con_user.id}}')
 								$('#user_info').text('{{con_user.city}}, {{con_user.state}}');
 							}
 							i++;
@@ -436,7 +436,7 @@
 	<body>
 		<!-- Topic -->
 		<div id='header'>
-			<a href='http://127.0.0.1:8000/home/'>
+			<a href='/home/'>
 				<h2>Soapbox</h2>
 			</a>
 			<div class='profile'>
@@ -496,7 +496,7 @@
 								<h3></h3>
 							</div>
 							<div id='user'>
-								<a href='http://127.0.0.1:8000/profile/{{pro_users.0.id}}'>{{pro_users.0.name}}</a>
+								<a href='/profile/{{pro_users.0.id}}'>{{pro_users.0.name}}</a>
 								<span id='user_info'></span>
 							</div>
 						</div>
@@ -617,7 +617,7 @@
       function onUploadSuccess(event) {
         alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
 				$.ajax({
-					url:'http://127.0.0.1:8000/submit_video/',
+					url:'/submit_video/',
 					type: 'POST',
 					data : {
 						csrfmiddlewaretoken: "{{ csrf_token }}",
