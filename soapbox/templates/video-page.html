@@ -170,14 +170,16 @@
 
 						// loop through upvotes to see if the video was update by the user
 						var upvote_found = false
-						{% for upvote in upvotes %}
-							if ( '{{upvote.video.video_id}}' == videoID )
-							{
-								$('#upvote_button').attr('id', 'upvote_button_activate');
-								$('#num_upvotes').css('color', '#33cc33');
-								upvote_found = true
-							}
-						{% endfor %}
+						{% if upvotes %}
+							{% for upvote in upvotes %}
+								if ( '{{upvote.video.video_id}}' == videoID )
+								{
+									$('#upvote_button').attr('id', 'upvote_button_activate');
+									$('#num_upvotes').css('color', '#33cc33');
+									upvote_found = true
+								}
+							{% endfor %}
+						{% endif %}
 						if (!upvote_found)
 						{
 							$('#upvote_button_activate').attr('id', 'upvote_button');
