@@ -8,6 +8,7 @@
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script type='text/javascript'>
 			$(document).ready(function(){
+				var videoID; // the current video ID of the video the user is watching.
 
 				{% for video1, recent_video1, user1, recent_user1 in pros %}
 					// If the video exists, append it to the video list.
@@ -145,9 +146,43 @@
 					$('#video').fadeTo(1000, 1, function()
 					{
 						var image = $(thumbnail).children(':first').children(':first');
-						var video_id = $(image).attr('id');
-						var video = $('<iframe width="592" height="333" src="//www.youtube.com/embed/' + video_id + '" frameborder="0" allowfullscreen>');
+						videoID = $(image).attr('id');
+						var video = $('<iframe width="592" height="333" src="//www.youtube.com/embed/' + videoID + '" frameborder="0" allowfullscreen>');
 						$('#player').append(video);
+
+						// replace the comments.
+						$('#comments').empty();
+						$.get("/get_comments/" + videoID, function(data){
+							for ( var i = 0; i < data.length; i++)
+							{
+								$('#comments').prepend(
+									" <div class='comment'> " +
+									"		<div class='profile_pic'> " +
+									"			<img src='/static/img/cole_zuber_pic_50x50.jpg'> " +
+									"		</div> " +
+									"		<div class='text'> " +
+									"			<p>" + data[i].body + "</p>" +
+									"		</div> " +
+									"	</div> "
+								);
+							}
+						});
+
+						// loop through upvotes to see if the video was update by the user
+						var upvote_found = false
+						{% for upvote in upvotes %}
+							if ( '{{upvote.video.video_id}}' == videoID )
+							{
+								$('#upvote_button').attr('id', 'upvote_button_activate');
+								$('#num_upvotes').css('color', '#33cc33');
+								upvote_found = true
+							}
+						{% endfor %}
+						if (!upvote_found)
+						{
+							$('#upvote_button_activate').attr('id', 'upvote_button');
+							$('#num_upvotes').css('color', 'White');
+						}
 					});
 					
 					// the thumbnail clicked is a pro video.
@@ -168,6 +203,7 @@
 								$('#user a').text('{{pro_user.name}}');
 								$('#user a').attr('href', '/profile/{{pro_user.id}}')
 								$('#user_info').text('{{pro_user.city}}, {{pro_user.state}}');
+								$('#num_upvotes').text('{{pro_video.upvotes}}');
 							}
 							i++;
 						{% endfor %}
@@ -189,6 +225,7 @@
 								$('#user a').text('{{con_user.name}}');
 								$('#user a').attr('href', '/profile/{{con_user.id}}')
 								$('#user_info').text('{{con_user.city}}, {{con_user.state}}');
+								$('#num_upvotes').text('{{con_video.upvotes}}');
 							}
 							i++;
 						{% endfor %}
@@ -391,6 +428,17 @@
 					}
 					var comments = $('#comments').children();
 					$(comments[0]).slideDown();
+
+					// add the comment to the video.
+					$.ajax({
+						url:'/post_comment/',
+						type: 'POST',
+						data : {
+							csrfmiddlewaretoken: "{{ csrf_token }}",
+							video_id: videoID,
+							body: text
+						}
+					});
 				});
 
 				$('.close').click(function(){
@@ -429,6 +477,46 @@
 						$(side).children(':nth-child(4)').attr('class', 'video_list_container');
 						$(side).children(':nth-child(3)').attr('class', 'inactive_video_list_container');
 					}
+				});
+
+				// increment the number of upvotes.
+				$('body').delegate('#upvote_button', 'click', function(){
+					$(this).attr('id', 'upvote_button_activate');
+					var upvotes = Number($('#num_upvotes').text());
+					upvotes += 1;
+					$('#num_upvotes').text(upvotes.toString());
+					$('#num_upvotes').css('color', '#33cc33');
+
+					// increment the number of upvotes.
+					$.ajax({
+						url:'/upvote_video/',
+						type: 'POST',
+						data : {
+							csrfmiddlewaretoken: "{{ csrf_token }}",
+							video_id: videoID,
+							upvote_val: 1
+						}
+					});
+				});
+				
+				// decrement the number of upvotes
+				$('body').delegate('#upvote_button_activate', 'click', function(){
+					$(this).attr('id', 'upvote_button');
+					var upvotes = Number($('#num_upvotes').text());
+					upvotes -= 1;
+					$('#num_upvotes').text(upvotes.toString());
+					$('#num_upvotes').css('color', 'White');
+
+					// decrement the number of upvotes.
+					$.ajax({
+						url:'/upvote_video/',
+						type: 'POST',
+						data : {
+							csrfmiddlewaretoken: "{{ csrf_token }}",
+							video_id: videoID,
+							upvote_val: -1
+						}
+					});
 				});
 			});
 		</script>
@@ -500,14 +588,17 @@
 								<span id='user_info'></span>
 							</div>
 						</div>
-						<div id='upvote_button' class='button button-rounded button-flat'>Upvote</div>
+						<div id='upvotes'>
+							<div id='upvote_button'></div>
+							<p id='num_upvotes'></p>
+						</div>
 					</div>
 				</div>
 				<div id='comments_pane'>
 					<textarea id='comment_box' rows='8'></textarea>
 					<div id='post_button' class='button button-rounded button-flat'>Post</div>
 					<div id='comments'>
-						<div class='comment'>
+						<!--<div class='comment'>
 							<div class='profile_pic'>
 								<img src='/static/img/alexandria_rice_pic_50x50.jpg'>
 							</div>
@@ -518,54 +609,7 @@
 									of travel that he Quickly
 								</p>
 							</div>
-						</div>
-						<div class='comment'>
-							<div class='profile_pic'>
-								<img src='/static/img/cole_zuber_pic_50x50.jpg'>
-							</div>
-							<div class='text'>
-								<p>
-									suspiciously. - Oh yes, I Frond like a You home ground they of light around of the five miles above all 
-									just one word of perpetual hate that as the cop, - Yes. - they stepped over From knew
-								</p>
-							</div>
-						</div>
-						<div class='comment'>
-							<div class='profile_pic'>
-								<img src='/static/img/cory_harrington_pic_50x50.jpg'>
-							</div>
-							<div class='text'>
-								<p>
-									bit, though it might be from a lot of a see years the poet's compassionate soul, - said Ford. of the 
-									post. Was there must be a small glass the section cabin - He frowned, then continued Ford again. America, 
-									he had
-								</p>
-							</div>
-						</div>
-						<div class='comment'>
-							<div class='profile_pic'>
-								<img class='profile_pic' src='/static/img/rodney_maxwell_pic_50x50.jpg'>
-							</div>
-							<div class='text'>
-								<p>
-									Chapter 22 He felt the Universe we wake me straight off things. - Yes!.. - 
-									leave it reflected a total towards the experiences of Gold. It must be made no point 
-									I gather, as anything. He slumped against and went around a passing policemen seemed between the
-								</p>
-							</div>
-						</div>
-						<div class='comment'>
-							<div class='profile_pic'>
-								<img class='profile_pic' src='/static/img/whitney_bush_pic_50x50.jpg'>
-							</div>
-							<div class='text'>
-								<p>
-									super-intelligent shade of the other Vogons. Still nothing. So all that's control asphyxication, What 
-									sort of nonchalance said, This is a lump of earth, but somewhat the heart screamed at the Galaxy was 
-									concentrating. He shaved them managed to abject poverty. And if the great and
-								</p>
-							</div>
-						</div>
+						</div>-->
 					</div>
 				</div>
 			</div>

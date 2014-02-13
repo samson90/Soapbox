@@ -468,16 +468,48 @@ body h2
 	float: left;
 }
 
-#upvote_button
+#upvotes
 {
 	float: left;
-	margin-top: 25px;
+	margin-top: 10px;
 	margin-left: 15px;
+}
+
+#upvote_button
+{
+	display: block;
+	height: 32px;
+	width: 32px;
+	background: url('/static/img/thumbs_up.png');
 }
 
 #upvote_button:hover
 {
 	cursor: pointer;
+	background: url('/static/img/thumbs_up_activate.png');
+}
+
+#upvote_button_activate
+{
+	display: block;
+	height: 32px;
+	width: 32px;
+	background: url('/static/img/thumbs_up_activate.png');
+}
+
+#upvote_button_activate:hover
+{
+	cursor: pointer;
+	background: url('/static/img/thumbs_up.png');
+}
+
+#num_upvotes
+{
+	-webkit-margin-before: 0em;
+	font-size: 12px;
+	text-align: center;
+	color: white;
+	font-family: Helvetica, Arial;
 }
 
 .inactive_thumbnail

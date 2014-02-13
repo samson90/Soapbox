@@ -31,3 +31,16 @@ class Video(models.Model):
 
 	def __unicode__(self):
 		return self.name
+
+class Comments(models.Model):
+	body = models.CharField(max_length=1000)
+	post_date = models.DateTimeField()
+	video = models.ForeignKey(Video)
+	user = models.ForeignKey(User)
+
+	def __unicode__(self):
+		return self.body
+
+class Upvote(models.Model):
+	video = models.ForeignKey(Video)
+	user = models.ForeignKey(User)

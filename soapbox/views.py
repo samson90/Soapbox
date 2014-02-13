@@ -6,7 +6,9 @@ from django.shortcuts import render_to_response
 from soapbox_demo.models import *
 import datetime
 from django.conf import settings
+from django.utils import simplejson
 
+################# HOME ########################
 def home(request):
 	topics = [];
 	topics = Topic.objects.order_by('-post_date').all()
@@ -23,6 +25,7 @@ def home(request):
 		}
 	)
 
+################# VIDEO PAGE ########################
 def video_page(request, topic_id):
 	pro_videos = []
 	pro_videos_date = []
@@ -32,6 +35,8 @@ def video_page(request, topic_id):
 	pro_videos_date = Video.objects.filter(pro=True).order_by('-post_date')
 	con_videos = Video.objects.filter(pro=False).order_by('-upvotes')
 	con_videos_date = Video.objects.filter(pro=False).order_by('-post_date')
+	user = User.objects.get(id=10)
+	upvotes = Upvote.objects.filter(user=user)
 	pro_users = []
 	pro_users_date = []
 	con_users = []
@@ -50,9 +55,11 @@ def video_page(request, topic_id):
 		{
 			"pros": pros,
 			"cons": cons,
+			"upvotes": upvotes
 		}, context_instance=RequestContext(request)
 	)
 
+################# SUBMIT VIDEO ########################
 def submit_video(request):
 	#get video info
 	video_id = request.POST['video_id']
@@ -75,8 +82,64 @@ def submit_video(request):
 
 	with open('logs/monitor.log', 'a') as myfile:
 		myfile.write('\n' + video_id + ', ' + title + ', ' + str(pro) + ', ' + topic.name + ', ' + user.name)	
-	return HttpResponse("{success': 'false'}")
+	return HttpResponse("{'success': 'true'}")
 
+################# UPVOTE VIDEO ########################
+def upvote_video(request):
+	#get the info
+	video_id = request.POST.get('video_id', None)
+	upvote_val = request.POST.get('upvote_val', None)
+	upvote_val = int(upvote_val)
+
+	#get the video and increment the upvotes
+	video = Video.objects.get(video_id=str(video_id))
+	video.upvotes += upvote_val
+	video.save()
+
+	# add or remove an upvote record
+	user = User.objects.get(id=10)
+	if upvote_val > 0:
+		upvote = Upvote.objects.create(video=video, user=user)
+		upvote.save()
+	else:
+		upvote = Upvote.objects.filter(video=video, user=user).delete()
+
+	myfile = open('logs/monitor.log', 'a')
+	myfile.write('\n' + str(video_id) + ' ' + str(upvote_val))
+	myfile.close()
+	
+	return HttpResponse("{'success': 'true'}")
+
+################# GET COMMENTS ########################
+def get_comments(request, video_id):
+	video = Video.objects.get(video_id=str(video_id))
+	video_comments = Comments.objects.filter(video=video)
+
+	#get a list of comments
+	comments = []
+	for c in video_comments:
+		comment = {"user": "", "body": "" , "post_date": ""}
+		comment['user'] = c.user.name;
+		comment['body'] = c.body;
+		comment['post_date'] = str(c.post_date);
+		comments.append(comment)
+	
+	json = simplejson.dumps(comments)
+	return HttpResponse(json, mimetype="application/json")
+
+################# POST COMMENT ######################
+def post_comment(request):
+	#get the info
+	video_id = request.POST.get('video_id', None)
+	body = request.POST.get('body', None)
+
+	video = Video.objects.get(video_id=str(video_id))
+	user = User.objects.get(id=10)
+	comment = Comments.objects.create(video=video, body=str(body), \
+		post_date=datetime.datetime.now(), user=user)
+	comment.save()
+
+################# PROFILE ########################
 def profile(request, user_id):
 	user = User.objects.get(id=user_id)
 	return render_to_response('profile.html',
@@ -84,6 +147,22 @@ def profile(request, user_id):
 			"user": user
 		}
 	)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Video Debate site views.
 def email(request):
