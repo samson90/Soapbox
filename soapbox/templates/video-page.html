@@ -295,7 +295,7 @@
 					{
 						if (!$(e.target).closest($('#video')).length > 0 )
 						{//popup is a video
-							$('iframe').remove();
+							$('#video iframe').remove();
 							$('#video').fadeTo(1000, 0, function()
 							{
 								$('#video').css('visibility', 'hidden');
@@ -444,7 +444,7 @@
 				});
 
 				$('.close').click(function(){
-					$('iframe').remove();
+					$('#video iframe').remove();
 					$('#video').fadeTo(1000, 0, function()
 					{
 						$('#video').css('visibility', 'hidden');
