@@ -89,8 +89,8 @@ STATIC_URL = '/static/'
 # Parse database configuration from $DATABASE_URL
 #COMMENT OUT LINES BELOW IF RUNNING LOCALLY
 ###############################
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()
 #############################
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
