@@ -6,132 +6,26 @@
 		<link rel='stylesheet' type='text/css' href='/static/css/font-awesome-ie7.min.css'/>
 		<link rel='stylesheet' type='text/css' href='/static/css/font-awesome.min.css'/>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script type='text/javascript'>
+		<script src='/static/js/user.js'></script>
+		<script src='/static/js/video.js'></script>
+		<script src='/static/js/video_list.js'></script>
+		<script src='/static/js/video-page.js'></script>
+		<script type="text/javascript">
 			$(document).ready(function(){
-				var videoID; // the current video ID of the video the user is watching.
+				// create an array of all videos and users.
+				var videos = [];
 
-				{% for video1, recent_video1, user1, recent_user1 in pros %}
-					// If the video exists, append it to the video list.
-					$.ajax({
-						async: false,
-						type: 'GET',
-						url: "http://gdata.youtube.com/feeds/api/videos/{{video1.video_id}}", 
-						success: function(){
-							//create the thumbnail to insert.
-							var thumbnail = $(
-								"<div class='thumbnail'>" +
-								" <div class='video_pic'>" +
-								"		<img id='{{video1.video_id}}' src='http://img.youtube.com/vi/{{video1.video_id}}/0.jpg'>" +
-								" </div> " +
-								"	<div class='video_title'>" +
-								"		<h3>{{video1.name}}</h3>" +
-								" </div>" +
-								" <div class='video_info'>" +
-								"		<span class='name'>{{user1.name}}</span>" +
-								"		<span class='upvotes'>{{video1.upvotes}} Upvotes</span>" +
-								"		<p class='views_date'>{{video1.post_date|timesince}} ago</p>" +
-								" </div>" +
-								"</div>"
-							);
+				{% for video in videos %}
+					var user = new User("{{video.user.name}}", "{{video.user.occupation}}", "{{video.user.city}}",
+						"{{video.user.state}}", {{video.user.age}});
 
-							$('#pro .video_list_container_inner').append(thumbnail);
-						}
-					});
-					
-					$.ajax({
-						async: false,
-						type: 'GET',
-						url: "http://gdata.youtube.com/feeds/api/videos/{{recent_video1.video_id}}", 
-						success: function(){
-							//create the thumbnail to insert.
-							var thumbnail = $(
-								"<div class='thumbnail'>" +
-								" <div class='video_pic'>" +
-								"		<img id='{{recent_video1.video_id}}' src='http://img.youtube.com/vi/{{recent_video1.video_id}}/0.jpg'>" +
-								" </div> " +
-								"	<div class='video_title'>" +
-								"		<h3>{{recent_video1.name}}</h3>" +
-								" </div>" +
-								" <div class='video_info'>" +
-								"		<span class='name'>{{recent_user1.name}}</span>" +
-								"		<span class='upvotes'>{{recent_video1.upvotes}} Upvotes</span>" +
-								"		<p class='views_date'>{{recent_video1.post_date|timesince}} ago</p>" +
-								" </div>" +
-								"</div>"
-							);
-
-							$('#pro .recent_video_list_container_inner').append(thumbnail);
-						}
-					});
+					var video = new Video("{{video.video_id}}", "{{video.name}}", "{{video.post_date}}", "{{video.pro}}",
+						{{video.upvotes}}, "{{video.topic}}", user);
+					videos.push(video);
 				{% endfor %}
 
-				// show down arrows if there are more than four videos in the list.
-				if ( $('#pro_video_list_container .thumbnail').length > 3 )
-					$('#pro .inactive_down_arrow').attr('class', 'down_arrow');	
-				
-				// same as above for con videos.
-				var i = 2;
-				var count = 0;
-				{% for video2, recent_video2, user2, recent_user2 in cons %}
-					// If the video exists, append it to the video list.
-					$.ajax({
-						async: false,
-						type: 'GET',
-						url: "http://gdata.youtube.com/feeds/api/videos/{{video2.video_id}}", 
-						success: function(){
-							//create the thumbnail to insert.
-							var thumbnail = $(
-								"<div class='thumbnail'>" +
-								" <div class='video_pic'>" +
-								"		<img id='{{video2.video_id}}' src='http://img.youtube.com/vi/{{video2.video_id}}/0.jpg'>" +
-								" </div> " +
-								"	<div class='video_title'>" +
-								"		<h3>{{video2.name}}</h3>" +
-								" </div>" +
-								" <div class='video_info'>" +
-								"		<span class='name'>{{user2.name}}</span>" +
-								"		<span class='upvotes'>{{video2.upvotes}} Upvotes</span>" +
-								"		<p class='views_date'>{{video2.post_date|timesince}} ago</p>" +
-								" </div>" +
-								"</div>"
-							);
-
-							$('#con .video_list_container_inner').append(thumbnail);
-						}
-					});
-					
-					$.ajax({
-						async: false,
-						type: 'GET',
-						url: "http://gdata.youtube.com/feeds/api/videos/{{recent_video2.video_id}}", 
-						success: function(){
-							//create the thumbnail to insert.
-							var thumbnail = $(
-								"<div class='thumbnail'>" +
-								" <div class='video_pic'>" +
-								"		<img id='{{recent_video2.video_id}}' src='http://img.youtube.com/vi/{{recent_video2.video_id}}/0.jpg'>" +
-								" </div> " +
-								"	<div class='video_title'>" +
-								"		<h3>{{recent_video2.name}}</h3>" +
-								" </div>" +
-								" <div class='video_info'>" +
-								"		<span class='name'>{{recent_user2.name}}</span>" +
-								"		<span class='upvotes'>{{recent_video2.upvotes}} Upvotes</span>" +
-								"		<p class='views_date'>{{recent_video2.post_date|timesince}} ago</p>" +
-								" </div>" +
-								"</div>"
-							);
-
-							$('#con .recent_video_list_container_inner').append(thumbnail);
-						}
-					});
-				{% endfor %}
-
-				if ( $('#con_video_list_container .thumbnail').length > 3 )
-					$('#con .inactive_down_arrow').attr('class', 'down_arrow');	
-
-				//var show_more = $("<div id='show_more' class='button button-rounded button-flat-primary'>Show more</div>")
-				//$('#con .video_list_container_inner').append(show_more);	
+				var video_list = new VideoList(videos);
+				show_videos(video_list);
 			
 				// user clicks thumbnail, new video shows up.
 				$('.video_title').click(function(){
@@ -143,10 +37,10 @@
 					$('#video').css('visibility', 'visible');
 
 					var thumbnail = $(this).parent();
+					var image = $(thumbnail).children(':first').children(':first');
+					var videoID = $(image).attr('id');
 					$('#video').fadeTo(1000, 1, function()
 					{
-						var image = $(thumbnail).children(':first').children(':first');
-						videoID = $(image).attr('id');
 						var video = $('<iframe width="592" height="333" src="//www.youtube.com/embed/' + videoID + '" frameborder="0" allowfullscreen>');
 						$('#player').append(video);
 
@@ -187,51 +81,20 @@
 						}
 					});
 					
-					// the thumbnail clicked is a pro video.
+					// Change background based on pro or con.
 					video_list_container = $(thumbnail).parent().parent();
 					if ( $(video_list_container).attr('id') == 'pro_video_list_container' )
-					{
-						//change background to blue
 						$('#video').css('background-color', '#1874cd');	
-
-						// get info for video
-						var video_index = $(thumbnail).index();
-						var i = 0;
-						{% for pro_video, pro_video_date, pro_user in pros %}
-							if ( i === video_index )
-							{
-								$('#title h3').text('{{pro_video.name}}');
-								//$('.vote_count p').text('{{pro_video.upvotes}}');
-								$('#user a').text('{{pro_user.name}}');
-								$('#user a').attr('href', '/profile/{{pro_user.id}}')
-								$('#user_info').text('{{pro_user.city}}, {{pro_user.state}}');
-								$('#num_upvotes').text('{{pro_video.upvotes}}');
-							}
-							i++;
-						{% endfor %}
-					}
-					// the video clicked is a con_video
 					else
-					{
-						//change background to red
-						$('#video').css('background-color', '#d23');
-
-						// get info for video
-						var video_index = $(thumbnail).index();
-						var i = 0;
-						{% for con_video, con_video_date, con_user in cons %}
-							if ( i === video_index )
-							{
-								$('#title h3').text('{{con_video.name}}');
-								//$('#con .vote_count p').text('{{con_video.upvotes}}');
-								$('#user a').text('{{con_user.name}}');
-								$('#user a').attr('href', '/profile/{{con_user.id}}')
-								$('#user_info').text('{{con_user.city}}, {{con_user.state}}');
-								$('#num_upvotes').text('{{con_video.upvotes}}');
-							}
-							i++;
-						{% endfor %}
-					}
+						$('#video').css('background-color', '#d23')
+						
+					// get info for the video.
+					video = video_list.get_by_id(videoID)
+					$('#title h3').text(video.name);
+					$('#user a').text(video.user.name);
+					$('#user a').attr('href', '/profile/' + video.user.name)
+					$('#user_info').text(video.user.city + ', ' + video.user.state);
+					$('#num_upvotes').text(video.upvotes);	
 				});
 
 				$(document).ajaxSend(function(event, xhr, settings) {
@@ -524,6 +387,7 @@
 		</script>
 	</head>
 	<body>
+
 		<!-- Topic -->
 		<div id='header'>
 			<a href='/home/'>
@@ -600,7 +464,7 @@
 					<textarea id='comment_box' rows='8'></textarea>
 					<div id='post_button' class='button button-rounded button-flat'>Post</div>
 					<div id='comments'>
-						<!--<div class='comment'>
+						<div class='comment'>
 							<div class='profile_pic'>
 								<img src='/static/img/alexandria_rice_pic_50x50.jpg'>
 							</div>
@@ -611,7 +475,7 @@
 									of travel that he Quickly
 								</p>
 							</div>
-						</div>-->
+						</div>
 					</div>
 				</div>
 			</div>
